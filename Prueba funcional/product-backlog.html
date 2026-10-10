@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Product Backlog — Informe QA</title><style>
+:root{--bg:#f4f6f9;--paper:#fff;--ink:#1d2733;--muted:#5d6b7c;--line:#e2e7ee;--soft:#f7f9fb;
+--accent:#2f5bea;--accent-soft:#eaf0ff;--ok:#1a7f4b;--ok-soft:#e7f6ee;--code-bg:#1e2430;--code-ink:#e6e9ef;
+--rojo:#c62828;--rojo-s:#fdecec;--naranja:#b35c00;--naranja-s:#fff3e0;--azul:#1f5fbf;--azul-s:#e8f0fd;
+--verde:#1a7f4b;--verde-s:#e6f6ed;--morado:#6b3fb3;--morado-s:#f1eafc;--gris:#5d6b7c;--gris-s:#eef1f5;--oscuro:#2b3440;--oscuro-s:#e4e8ee}
+@media (prefers-color-scheme:dark){:root{--bg:#12161c;--paper:#1a2029;--ink:#e3e8ef;--muted:#9aa7b7;--line:#2c3542;--soft:#202733;
+--accent:#7ea1ff;--accent-soft:#1f2a44;--ok:#5fd39a;--ok-soft:#16301f;--code-bg:#0f1319;
+--rojo:#ff8a80;--rojo-s:#3a1d1d;--naranja:#ffb74d;--naranja-s:#3a2a14;--azul:#8ab4ff;--azul-s:#1b2a45;
+--verde:#6fdca3;--verde-s:#15301f;--morado:#c3a3ff;--morado-s:#2a2140;--gris:#aab4c2;--gris-s:#262e39;--oscuro:#cfd6e0;--oscuro-s:#2a323d}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 "Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif}
+#progress{position:fixed;top:0;left:0;height:3px;background:var(--accent);width:0;z-index:20}
+.layout{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:100vh}
+aside{position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--paper);border-right:1px solid var(--line);padding:22px 16px 40px}
+aside .brand{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 8px 4px}
+aside .doc-title{font-weight:700;font-size:15px;margin:0 8px 16px;line-height:1.35}
+aside a.back{display:block;margin:0 8px 18px;font-size:13px;color:var(--accent);text-decoration:none}
+nav ul{list-style:none;margin:0;padding:0}
+nav a{display:block;color:var(--muted);text-decoration:none;font-size:13.5px;line-height:1.35;padding:5px 8px;border-radius:6px;border-left:2px solid transparent}
+nav a:hover{background:var(--soft);color:var(--ink)}
+nav a.active{color:var(--accent);background:var(--accent-soft);border-left-color:var(--accent);font-weight:600}
+nav .l1>a{color:var(--ink);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.05em;margin-top:14px}
+nav .l2>a{padding-left:12px}
+nav ul.sub{display:none;margin-left:12px;border-left:1px solid var(--line)}
+nav li.open>ul.sub{display:block}
+nav ul.sub a{font-size:12.5px;padding:3px 10px}
+main{padding:40px 56px 120px;max-width:1040px;width:100%;min-width:0}
+article.part,.card{min-width:0;overflow-wrap:break-word}
+.doc-head{margin-bottom:28px}
+.doc-head .kicker{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.doc-head .title{font-size:34px;font-weight:750;line-height:1.2;margin:6px 0 10px}
+.doc-head .meta{color:var(--muted);font-size:14px}
+.btn-excel{display:inline-block;margin-top:14px;font-size:14px;font-weight:650;text-decoration:none;color:#fff;background:#1d6f42;border-radius:8px;padding:8px 16px}
+.btn-excel:hover{background:#155232}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.pills a{font-size:13px;text-decoration:none;color:var(--accent);background:var(--accent-soft);padding:4px 12px;border-radius:999px}
+article.part{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:36px 44px;margin-bottom:36px}
+.part-head{border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:10px}
+.part-label{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+h1{font-size:28px;line-height:1.25;margin:4px 0 0}
+h2{font-size:22px;line-height:1.3;margin:44px 0 12px;padding-top:6px}
+h3{font-size:17.5px;line-height:1.35;margin:30px 0 10px}
+h4{font-size:15.5px;margin:22px 0 8px;color:var(--muted)}
+p{margin:10px 0}
+a{color:var(--accent)}
+hr{border:0;border-top:1px solid var(--line);margin:28px 0}
+strong{font-weight:650}
+code{font-family:Consolas,"Cascadia Code",Menlo,monospace;font-size:.88em;background:var(--soft);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+code.id{background:var(--accent-soft);border-color:transparent;color:var(--accent);font-weight:600}
+blockquote{margin:14px 0;padding:12px 18px;border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0}
+blockquote p{margin:0}
+ul,ol{padding-left:24px;margin:8px 0}
+li{margin:4px 0}
+li.task{list-style:none;margin-left:-20px}
+.chk{color:var(--accent);font-size:1.05em;margin-right:4px}
+.table-wrap{overflow-x:auto;margin:14px 0 18px;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:14.5px;line-height:1.5}
+th{background:var(--soft);text-align:left;font-weight:650;color:var(--ink);padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:last-child td{border-bottom:0}
+td.nowrap{white-space:nowrap}
+td.wide{min-width:240px}
+tbody tr:nth-child(even) td{background:color-mix(in srgb,var(--soft) 55%,transparent)}
+table.meta td:first-child{width:26%;font-weight:600;color:var(--muted);background:var(--soft)}
+table.meta thead{display:none}
+.b{display:inline-block;font-size:12.5px;font-weight:650;padding:1px 9px;border-radius:999px;white-space:nowrap}
+.b-rojo{color:var(--rojo);background:var(--rojo-s)}.b-naranja{color:var(--naranja);background:var(--naranja-s)}
+.b-azul{color:var(--azul);background:var(--azul-s)}.b-verde{color:var(--verde);background:var(--verde-s)}
+.b-morado{color:var(--morado);background:var(--morado-s)}.b-gris{color:var(--gris);background:var(--gris-s)}
+.b-oscuro{color:var(--oscuro);background:var(--oscuro-s)}
+.card{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:6px 24px 16px;margin:22px 0;background:var(--paper);box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.card h3{margin-top:16px}
+.card h4{margin-top:14px;font-size:16.5px;color:var(--ink);line-height:1.4}
+.card ul{margin-top:6px}
+.tag-id{display:inline-block;font-family:Consolas,Menlo,monospace;font-size:13px;color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:6px;margin-right:6px;vertical-align:2px}
+p.label{margin:18px 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.expected{background:var(--ok-soft);border-left:4px solid var(--ok);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0}
+.expected-title{margin:0 0 4px}
+div.expected ul{margin:4px 0 0}
+div.expected li{margin:5px 0}
+/* Tabla de preguntas del refinamiento: la columna Respuesta se ve como un espacio para escribir */
+table.preguntas td.wide{min-width:200px}
+table.preguntas td.resp{min-width:150px;background:var(--soft);border-left:1px dashed var(--line)}
+table.preguntas td.resp:empty::before{content:"Sin respuesta";color:var(--muted);font-style:italic;font-size:13.5px}
+div.exec{margin-top:14px;padding:10px 14px;border:1px dashed var(--line);border-radius:8px;color:var(--muted);font-size:14px;background:var(--soft)}
+.code{position:relative;margin:14px 0 18px}
+.code-lang{position:absolute;top:8px;right:12px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#8b95a7}
+pre{margin:0;background:var(--code-bg);color:var(--code-ink);padding:18px 20px;border-radius:10px;overflow-x:auto;font-size:13.5px;line-height:1.6}
+pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit}
+.g-kw{color:#7fb4ff;font-weight:700}.g-tag{color:#e0a458}.g-com{color:#7d8799;font-style:italic}
+.g-str{color:#a5d6a7}.g-pipe{color:#6b7689}.g-param{color:#f48fb1}
+/* Resultado vs. análisis */
+.blk{margin:40px 0 8px}
+.blk-label{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:3px 10px;border-radius:999px}
+.blk-resultado>.blk-label{color:var(--ok);background:var(--ok-soft)}
+.blk-resumen>.blk-label{color:var(--accent);background:var(--accent-soft)}
+section.blk>h2{margin-top:10px}
+.blk-explicacion{background:var(--accent-soft);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:14px 24px 12px}
+.blk-explicacion>.blk-label{color:var(--accent);background:var(--paper)}
+.blk-explicacion li{margin:8px 0}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0 4px;border-bottom:1px solid var(--line)}
+.tabs a{padding:8px 16px;font-size:14.5px;font-weight:600;text-decoration:none;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs a:hover{color:var(--ink)}
+.tabs a.on{color:var(--accent);border-bottom-color:var(--accent)}
+details.blk-analisis{border:1.5px dashed var(--line);background:var(--soft);border-radius:12px;padding:0 22px}
+details.blk-analisis .blk-label{color:var(--gris);background:var(--gris-s)}
+details.blk-analisis>summary h2{margin:8px 0 2px;font-size:19px;color:var(--muted)}
+details>summary{list-style:none;cursor:pointer}
+details>summary::-webkit-details-marker{display:none}
+details.blk-analisis>summary{padding:16px 0}
+.blk-hint{font-size:13px;color:var(--accent);font-weight:600}
+.blk-hint::after{content:"Mostrar ▾"}
+details[open]>summary>.blk-hint::after{content:"Ocultar ▴"}
+.blk-body{padding-bottom:18px}
+.blk-end{margin-top:22px;padding-top:10px;border-top:1.5px dashed var(--line);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-align:center}
+details.sub-analisis{margin:14px 0;border:1.5px dashed var(--line);border-radius:10px;background:var(--soft);padding:0 16px}
+details.sub-analisis>summary{padding:10px 0;font-size:14.5px;color:var(--muted)}
+.sub-label{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--gris);background:var(--gris-s);padding:2px 8px;border-radius:999px;margin-right:4px}
+.sub-body{padding-bottom:10px}
+p.porque{font-size:14px;color:var(--muted);background:var(--accent-soft);border-radius:8px;padding:8px 12px}
+/* Términos con explicación */
+.term{border-bottom:1.5px dotted var(--accent);cursor:help;outline:none}
+.term::after{content:"?";display:inline-block;font-size:10px;font-weight:700;line-height:14px;width:14px;height:14px;text-align:center;border-radius:50%;background:var(--accent);color:#fff;margin-left:3px;vertical-align:super}
+.term:focus{background:var(--accent-soft)}
+pre .term{border-bottom-color:#e0a458}
+pre .term::after{background:#e0a458;color:#1e2430}
+#tip{position:fixed;z-index:60;max-width:320px;background:var(--ink);color:var(--paper);font-size:13.5px;line-height:1.45;padding:10px 13px;border-radius:9px;box-shadow:0 8px 24px rgba(0,0,0,.25);display:none;pointer-events:none}
+#tip b{display:block;margin-bottom:3px}
+/* Leyenda y glosario */
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin-top:18px;padding:12px 16px;background:var(--paper);border:1px solid var(--line);border-radius:10px;font-size:13.5px;color:var(--muted)}
+.legend .blk-label{margin-right:4px}
+.lg-res{color:var(--ok);background:var(--ok-soft)}
+.lg-ana{color:var(--gris);background:var(--gris-s)}
+.lg-exp{color:var(--accent);background:var(--accent-soft)}
+#btn-analisis{margin-left:auto;border:1px solid var(--accent);background:var(--paper);color:var(--accent);border-radius:999px;padding:6px 16px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+#btn-analisis:hover{background:var(--accent-soft)}
+dl.glos{margin:10px 0 0;display:grid;grid-template-columns:minmax(160px,240px) 1fr;gap:10px 22px}
+dl.glos dt{font-weight:700}
+dl.glos dd{margin:0;color:var(--muted)}
+nav .toc-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--gris);background:var(--gris-s);border-radius:999px;padding:0 6px;margin-left:4px}
+nav a.k-analisis{font-style:italic}
+#toggle{display:none}
+@media (max-width:960px){
+ dl.glos{grid-template-columns:1fr;gap:2px 0} dl.glos dd{margin-bottom:10px}
+ .layout{grid-template-columns:minmax(0,1fr)}
+ aside{position:fixed;inset:0 25% 0 0;transform:translateX(-100%);transition:transform .2s;z-index:30;box-shadow:0 0 40px rgba(0,0,0,.25)}
+ aside.show{transform:none}
+ #toggle{display:block;position:fixed;right:16px;bottom:16px;z-index:40;border:0;border-radius:999px;padding:12px 18px;background:var(--accent);color:#fff;font-weight:600;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+ main{padding:24px 16px 90px}
+ article.part{padding:22px 18px}
+}
+@media print{
+ aside,#progress,#toggle,.pills,a.back,#tip,#btn-analisis{display:none!important}
+ .term::after,.blk-hint{display:none}
+ .layout{display:block} main{padding:0;max-width:none}
+ body{background:#fff;font-size:12.5px}
+ article.part{border:0;padding:0;break-before:page}
+ .card,table,pre{break-inside:avoid}
+}
+</style></head>
+<body><div id="progress"></div>
+<div class="layout">
+<aside><p class="brand">Equipo QA</p><p class="doc-title">Product Backlog</p><a class="back" href="index.html">← Todos los informes</a><nav><ul><li class="l1"><a href="#product-backlog">Product Backlog</a></li><li class="l2"><a href="#resumen">Resumen</a></li><li class="l2"><a href="#cómo-lo-ordené">¿Cómo lo ordené?</a></li><li class="l2"><a href="#backlog-ordenado">Backlog ordenado</a></li><li class="l2"><a href="#plan-de-sprints">Plan de sprints</a></li><li class="l2"><a href="#mvp">MVP</a></li><li class="l2"><a href="#pendientes-para-el-po">Pendientes para el PO</a></li><li class="l2"><a href="#decisiones-del-po">Decisiones del PO</a></li><li class="l1"><a href="#glosario">📖 Glosario</a></li></ul></nav></aside>
+<main>
+<div class="doc-head"><div class="kicker">Equipo QA · Backlog</div><div class="title">Product Backlog</div>
+<div class="meta">Generado el 09/10/2026 19:21</div><div class="tabs"><a href="00-product-backlog.html" class="on">Backlog</a><a href="00-auditoria-backlog.html">Auditoría del backlog</a></div><div class="legend"><span><span class="term" tabindex="0" data-tip="Así se marcan las palabras técnicas. Pasa el mouse o tócalas para ver qué significan. Al final está el glosario completo.">palabra</span> pasa el mouse para ver qué significa</span><span><span class="blk-label lg-exp">💡 Cómo se hizo</span>explicación sencilla del método</span></div></div>
+<article class="part"><header class="part-head"><h1 id="product-backlog">Product Backlog</h1></header>
+<h2 id="resumen">Resumen</h2>
+<p>MakersPay tiene 1 requisito (REQ-001, enviar dinero por celular). Dividí su historia HU-001 en 6 historias (HU-001.1 a HU-001.6) que suman 20 puntos y caben en 2 <span class="term" tabindex="0" data-tip="Periodo corto y fijo (normalmente 2 semanas) en el que el equipo entrega trabajo terminado.">sprints</span> (el <span class="term" tabindex="0" data-tip="Producto mínimo viable: lo mínimo que se puede lanzar y que ya le sirve al usuario.">MVP</span> completo, en el primero). El MVP son las 5 historias Must (18 puntos): enviar dinero y rechazar bien lo que no se debe enviar. No existía archivo de requisitos con prioridades ni puntos: la prioridad <span class="term" tabindex="0" data-tip="Método para priorizar: Must (obligatorio), Should (debería), Could (podría), Won&#x27;t (no por ahora).">MoSCoW</span> y los puntos son una propuesta mía y el <span class="term" tabindex="0" data-tip="Persona responsable del producto: decide qué se construye y en qué orden.">PO</span> debe confirmarlos.</p>
+<section class="blk blk-explicacion"><span class="blk-label">💡 Cómo se hizo · explicado fácil</span><h2 id="cómo-lo-ordené">¿Cómo lo ordené?</h2>
+<ul><li><strong>Dividí HU-001 por reglas, no por pantallas</strong>: "enviar con éxito" es una historia y cada tipo de rechazo (sin sesión, saldo, monto, destinatario) es otra. Así cada una se puede construir y probar sola. Doble clic en "Enviar" quedó aparte porque no es una regla del requerimiento. <em>(Método: <span class="term" tabindex="0" data-tip="Revisión de una historia: Independiente, Negociable, Valiosa, Estimable, Pequeña y Testeable.">INVEST</span> — historias pequeñas, independientes y probables)</em></li><li><strong>Puse primero el envío exitoso</strong>: los rechazos necesitan que el envío exista, por eso HU-001.1 va antes que HU-001.2 a HU-001.6. <em>(Método: dependencias — lo que se necesita antes)</em></li><li><strong>Luego lo obligatorio, después lo deseable</strong>: las 5 historias que cubren los 7 criterios son Must; el doble clic es Should porque es un <span class="term" tabindex="0" data-tip="Algo que se da por cierto porque nadie lo ha confirmado aún. Hay que validarlo con negocio.">supuesto</span>. <em>(Método: <span class="term" tabindex="0" data-tip="Método para priorizar: Must (obligatorio), Should (debería), Could (podría), Won&#x27;t (no por ahora).">MoSCoW</span> — Must, Should, Could, Won't)</em></li><li><strong>Entre los Must, primero lo que protege el dinero con poco esfuerzo</strong>: saldo (2 puntos) y sesión (2 puntos) antes que el rango de monto (3) y el destinatario (3). Un error ahí deja saldo negativo o permite mover dinero sin entrar a la cuenta. <em>(Método: <span class="term" tabindex="0" data-tip="Fórmula para priorizar: valor del trabajo dividido entre su tamaño. Cuanto más alto, antes se hace.">WSJF</span> — valor dividido entre esfuerzo)</em></li><li><strong>El <span class="term" tabindex="0" data-tip="Producto mínimo viable: lo mínimo que se puede lanzar y que ya le sirve al usuario.">MVP</span> sale del recorrido del usuario</strong>: enviar, ver que el dinero se movió, y que lo inválido se rechace (entrar a la cuenta se asume que ya existe). Lo que queda fuera es lo que no rompe ese recorrido. <em>(Método: <span class="term" tabindex="0" data-tip="Mapa del recorrido del usuario con sus historias debajo; ayuda a decidir qué va en cada entrega.">User Story Mapping</span> — mapa del recorrido del usuario)</em></li></ul>
+</section>
+<h2 id="backlog-ordenado">Backlog ordenado</h2>
+<div class="table-wrap"><table class=""><thead><tr><th>#</th><th>ID</th><th>Elemento</th><th>Tipo</th><th>Requisito</th><th>Prioridad</th><th>Puntos</th><th>Depende de</th><th>Estado</th><th>Sprint</th></tr></thead><tbody><tr><td class="nowrap">1</td><td class="nowrap">HU-001.1</td><td class="wide">Enviar dinero a otro usuario por celular; descuenta, acredita y registra historial (CA-001.01, .06)</td><td>Historia</td><td class="nowrap">REQ-001</td><td><span class="b b-rojo">Must</span></td><td class="nowrap">8</td><td>Sesión y saldo (<span class="term" tabindex="0" data-tip="Algo que se da por cierto porque nadie lo ha confirmado aún. Hay que validarlo con negocio.">supuesto</span>*)</td><td><span class="b b-naranja">Falta aclarar</span></td><td class="nowrap">1</td></tr><tr><td class="nowrap">2</td><td class="nowrap">HU-001.4</td><td class="wide">Rechazar el envío si el monto supera el saldo (CA-001.04, .07)</td><td>Historia</td><td class="nowrap">REQ-001</td><td><span class="b b-rojo">Must</span></td><td class="nowrap">2</td><td class="nowrap">HU-001.1</td><td><span class="b b-naranja">Falta aclarar</span></td><td class="nowrap">1</td></tr><tr><td class="nowrap">3</td><td class="nowrap">HU-001.2</td><td class="wide">Impedir enviar dinero sin sesión iniciada (CA-001.01, .07)</td><td>Historia</td><td class="nowrap">REQ-001</td><td><span class="b b-rojo">Must</span></td><td class="nowrap">2</td><td>HU-001.1, inicio de sesión (supuesto*)</td><td><span class="b b-naranja">Falta aclarar</span></td><td class="nowrap">1</td></tr><tr><td class="nowrap">4</td><td class="nowrap">HU-001.3</td><td class="wide">Rechazar montos menores a $5.000 o mayores a $2.000.000 (CA-001.02, .03, .07)</td><td>Historia</td><td class="nowrap">REQ-001</td><td><span class="b b-rojo">Must</span></td><td class="nowrap">3</td><td class="nowrap">HU-001.1</td><td><span class="b b-naranja">Falta aclarar</span></td><td class="nowrap">1</td></tr><tr><td class="nowrap">5</td><td class="nowrap">HU-001.5</td><td class="wide">Rechazar destinatario no registrado o mismo número (CA-001.01, .05, .07)</td><td>Historia</td><td class="nowrap">REQ-001</td><td><span class="b b-rojo">Must</span></td><td class="nowrap">3</td><td class="nowrap">HU-001.1</td><td><span class="b b-naranja">Falta aclarar</span></td><td class="nowrap">1</td></tr><tr><td class="nowrap">6</td><td class="nowrap">HU-001.6</td><td class="wide">Evitar envío doble por doble clic en "Enviar" (supuesto, sobre CA-001.06)</td><td>Historia</td><td class="nowrap">REQ-001</td><td><span class="b b-naranja">Should</span></td><td class="nowrap">2</td><td class="nowrap">HU-001.1</td><td><span class="b b-naranja">Falta aclarar</span></td><td class="nowrap">2</td></tr></tbody></table></div>
+<p><strong>Total:</strong> 20 puntos.</p>
+<p><strong>Fuera por ahora:</strong> ningún Won't. Tampoco entran "Iniciar sesión" ni "Ver saldo" como historias: la descripción del producto los menciona, pero no hay requerimiento para ellos.</p>
+<p><strong>\*Supuestos y dependencias:</strong> el envío necesita que ya existan "iniciar sesión" y "ver saldo" (y el historial como lugar donde queda el movimiento). Los trato como <span class="term" tabindex="0" data-tip="Lo que debe estar listo antes de ejecutar la prueba.">precondiciones</span> y no los inventé como historias. Si el equipo debe construirlos, hay que definirlos y sumarlos antes del <span class="term" tabindex="0" data-tip="Periodo corto y fijo (normalmente 2 semanas) en el que el equipo entrega trabajo terminado.">Sprint</span> 1 (ver Pendientes).</p>
+<h2 id="plan-de-sprints">Plan de sprints</h2>
+<p class="porque">💡 Supuse una velocidad de 20 puntos por <span class="term" tabindex="0" data-tip="Periodo corto y fijo (normalmente 2 semanas) en el que el equipo entrega trabajo terminado.">sprint</span> de 2 semanas. El Sprint 1 queda con 18 puntos, con 2 de margen mientras se aclaran las preguntas.</p>
+<div class="table-wrap"><table class=""><thead><tr><th>Sprint</th><th>Objetivo</th><th>Elementos</th><th>Puntos</th></tr></thead><tbody><tr><td class="nowrap">1</td><td class="wide">Que el usuario con sesión pueda enviar dinero a otro usuario registrado, sin pasarse del saldo ni de los montos permitidos, y que no se pueda enviar a un destinatario inválido.</td><td class="wide">HU-001.1, HU-001.4, HU-001.2, HU-001.3, HU-001.5</td><td class="nowrap">18</td></tr><tr><td class="nowrap">2</td><td>Que un doble clic no duplique el envío.</td><td class="nowrap">HU-001.6</td><td class="nowrap">2</td></tr></tbody></table></div>
+<h2 id="mvp">MVP</h2>
+<p>Entran HU-001.1, HU-001.4, HU-001.2, HU-001.3 y HU-001.5 (18 puntos, todas Must). Con ellas el usuario puede enviar dinero, y el sistema rechaza todo lo que las reglas prohíben sin tocar el saldo. HU-001.6 queda fuera: es un <span class="term" tabindex="0" data-tip="Algo que se da por cierto porque nadie lo ha confirmado aún. Hay que validarlo con negocio.">supuesto</span> sin regla propia. Todo el <span class="term" tabindex="0" data-tip="Producto mínimo viable: lo mínimo que se puede lanzar y que ya le sirve al usuario.">MVP</span> cabe en el <span class="term" tabindex="0" data-tip="Periodo corto y fijo (normalmente 2 semanas) en el que el equipo entrega trabajo terminado.">Sprint</span> 1 (18 de 20 puntos).</p>
+<h2 id="pendientes-para-el-po">Pendientes para el PO</h2>
+<ol><li>¿"Iniciar sesión" y "Ver saldo" ya existen o hay que construirlos? No tienen requerimiento. → Afecta a HU-001.1, HU-001.2 y al tamaño del <span class="term" tabindex="0" data-tip="Periodo corto y fijo (normalmente 2 semanas) en el que el equipo entrega trabajo terminado.">Sprint</span> 1.</li><li>¿El envío cobra comisión o impuestos, y el "saldo disponible" los incluye? (P-06) → Afecta a HU-001.1 y HU-001.4.</li><li>¿Si el monto es igual al saldo, se permite enviar? (P-02) → Afecta a HU-001.4 (Falta aclarar).</li><li>¿Cuál es el texto exacto de cada mensaje de error y qué ve quien no tiene sesión? (P-01) → Afecta a HU-001.2, .3, .4 y .5.</li><li>¿Se mantiene la protección contra doble clic aunque no esté en las reglas? → Afecta a HU-001.6 (Falta aclarar).</li><li>Detalles sin respuesta: montos $0, vacíos o con decimales (P-03), formato del celular (P-04), varios errores a la vez (P-05), sesión vencida, cuentas bloqueadas o falla a mitad del envío (P-07), confirmación y datos del historial (P-08), y si existe un tope acumulado por día o mes (<span class="term" tabindex="0" data-tip="Revisión de calidad; cada problema encontrado es un hallazgo.">auditoría</span>). → Afectan a HU-001.1 a HU-001.5.</li></ol>
+<h2 id="decisiones-del-po">Decisiones del PO</h2>
+<ul><li>HU-001.5 (destinatario no registrado o mismo número) sube del <span class="term" tabindex="0" data-tip="Periodo corto y fijo (normalmente 2 semanas) en el que el equipo entrega trabajo terminado.">Sprint</span> 2 al Sprint 1, para que el <span class="term" tabindex="0" data-tip="Producto mínimo viable: lo mínimo que se puede lanzar y que ya le sirve al usuario.">MVP</span> completo quede en un solo sprint.</li></ul></article><article class="part"><header class="part-head"><span class="part-label">Para aprender</span><h1 id="glosario">📖 Glosario de este informe</h1></header><p>Todas las palabras técnicas que aparecen en este informe, explicadas en palabras simples.</p><dl class="glos"><dt>Auditoría</dt><dd>Revisión de calidad; cada problema encontrado es un hallazgo.</dd><dt>INVEST</dt><dd>Revisión de una historia: Independiente, Negociable, Valiosa, Estimable, Pequeña y Testeable.</dd><dt>MoSCoW</dt><dd>Método para priorizar: Must (obligatorio), Should (debería), Could (podría), Won&#x27;t (no por ahora).</dd><dt>MVP</dt><dd>Producto mínimo viable: lo mínimo que se puede lanzar y que ya le sirve al usuario.</dd><dt>Precondición</dt><dd>Lo que debe estar listo antes de ejecutar la prueba.</dd><dt>Product Owner</dt><dd>Persona responsable del producto: decide qué se construye y en qué orden.</dd><dt>Sprint</dt><dd>Periodo corto y fijo (normalmente 2 semanas) en el que el equipo entrega trabajo terminado.</dd><dt>Story map</dt><dd>Mapa del recorrido del usuario con sus historias debajo; ayuda a decidir qué va en cada entrega.</dd><dt>Supuesto</dt><dd>Algo que se da por cierto porque nadie lo ha confirmado aún. Hay que validarlo con negocio.</dd><dt>WSJF</dt><dd>Fórmula para priorizar: valor del trabajo dividido entre su tamaño. Cuanto más alto, antes se hace.</dd></dl></article>
+</main></div>
+<button id="toggle" type="button">Índice</button>
+<script>
+(function(){
+ var links=[].slice.call(document.querySelectorAll('nav a[href^="#"]'));
+ var map={};links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a;});
+ var allHeads=[].slice.call(document.querySelectorAll('main h1[id],main h2[id],main h3[id]')).filter(function(h){return map[h.id];});
+ var bar=document.getElementById('progress'),aside=document.querySelector('aside');
+ // Un título está a la vista si ningún bloque plegado lo esconde (el título del propio bloque sí se ve)
+ function visible(h){var el=h;while(el){var d=el.parentElement&&el.parentElement.closest('details');if(!d)return true;
+  var s=el.closest('summary');if(!d.open&&!(s&&s.parentElement===d))return false;el=d;}return true;}
+ function update(){
+  var heads=allHeads.filter(visible);
+  var y=window.scrollY,cur=heads[0];
+  for(var i=0;i<heads.length;i++){if(heads[i].getBoundingClientRect().top<120)cur=heads[i];else break;}
+  links.forEach(function(a){a.classList.remove('active');});
+  document.querySelectorAll('nav li.open').forEach(function(li){li.classList.remove('open');});
+  if(cur&&map[cur.id]){var a=map[cur.id];a.classList.add('active');
+   var li=a.parentElement;while(li&&li.tagName!=='NAV'){if(li.tagName==='LI')li.classList.add('open');li=li.parentElement;}
+   var r=a.getBoundingClientRect(),ar=aside.getBoundingClientRect();
+   if(r.top<ar.top+60||r.bottom>ar.bottom-60)aside.scrollTop+=r.top-ar.top-ar.height/3;}
+  var h=document.documentElement.scrollHeight-window.innerHeight;bar.style.width=(h>0?y/h*100:0)+'%';
+ }
+ window.addEventListener('scroll',update,{passive:true});update();
+ var t=document.getElementById('toggle');
+ t.addEventListener('click',function(){aside.classList.toggle('show');});
+ // Abrir el análisis plegado que contiene el destino de un enlace del índice
+ function abrirHasta(id){var el=document.getElementById(id);if(!el)return;var d=el.closest('details');
+  while(d){d.open=true;d=d.parentElement.closest('details');}}
+ links.forEach(function(a){a.addEventListener('click',function(){aside.classList.remove('show');abrirHasta(a.getAttribute('href').slice(1));});});
+ if(location.hash)abrirHasta(decodeURIComponent(location.hash.slice(1)));
+ // Botón mostrar / ocultar todo el análisis
+ var btn=document.getElementById('btn-analisis');
+ if(btn){btn.addEventListener('click',function(){var abrir=btn.getAttribute('data-open')!=='1';
+  document.querySelectorAll('details.blk-analisis,details.sub-analisis').forEach(function(d){d.open=abrir;});
+  btn.setAttribute('data-open',abrir?'1':'0');btn.textContent=abrir?'Ocultar todo el análisis':'Mostrar todo el análisis';update();});}
+ document.addEventListener('toggle',function(){update();},true);
+ // Ventana de ayuda de los términos (mouse, teclado o toque)
+ var tip=document.createElement('div');tip.id='tip';document.body.appendChild(tip);var fijo=null;
+ function mostrar(el){tip.innerHTML='';var b=document.createElement('b');b.textContent=el.textContent;tip.appendChild(b);
+  tip.appendChild(document.createTextNode(el.getAttribute('data-tip')));tip.style.display='block';
+  var r=el.getBoundingClientRect(),w=tip.offsetWidth,h=tip.offsetHeight;
+  var x=Math.min(Math.max(8,r.left),window.innerWidth-w-8),yy=r.bottom+8;if(yy+h>window.innerHeight-8)yy=r.top-h-8;
+  tip.style.left=x+'px';tip.style.top=yy+'px';}
+ function ocultar(){tip.style.display='none';fijo=null;}
+ document.addEventListener('mouseover',function(e){var t=e.target.closest&&e.target.closest('.term');if(t)mostrar(t);});
+ document.addEventListener('mouseout',function(e){var t=e.target.closest&&e.target.closest('.term');if(t&&!fijo)tip.style.display='none';});
+ document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.term');
+  if(t){if(fijo===t){ocultar();}else{fijo=t;mostrar(t);}}else if(fijo){ocultar();}});
+ document.addEventListener('focusin',function(e){if(e.target.classList&&e.target.classList.contains('term'))mostrar(e.target);});
+ document.addEventListener('focusout',function(e){if(e.target.classList&&e.target.classList.contains('term')&&!fijo)tip.style.display='none';});
+ window.addEventListener('scroll',function(){if(tip.style.display==='block')ocultar();},{passive:true});
+})();
+</script></body></html>

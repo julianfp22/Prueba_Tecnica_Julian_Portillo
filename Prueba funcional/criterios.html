@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MakersPay-Envio-Dinero — Informe QA</title><style>
+:root{--bg:#f4f6f9;--paper:#fff;--ink:#1d2733;--muted:#5d6b7c;--line:#e2e7ee;--soft:#f7f9fb;
+--accent:#2f5bea;--accent-soft:#eaf0ff;--ok:#1a7f4b;--ok-soft:#e7f6ee;--code-bg:#1e2430;--code-ink:#e6e9ef;
+--rojo:#c62828;--rojo-s:#fdecec;--naranja:#b35c00;--naranja-s:#fff3e0;--azul:#1f5fbf;--azul-s:#e8f0fd;
+--verde:#1a7f4b;--verde-s:#e6f6ed;--morado:#6b3fb3;--morado-s:#f1eafc;--gris:#5d6b7c;--gris-s:#eef1f5;--oscuro:#2b3440;--oscuro-s:#e4e8ee}
+@media (prefers-color-scheme:dark){:root{--bg:#12161c;--paper:#1a2029;--ink:#e3e8ef;--muted:#9aa7b7;--line:#2c3542;--soft:#202733;
+--accent:#7ea1ff;--accent-soft:#1f2a44;--ok:#5fd39a;--ok-soft:#16301f;--code-bg:#0f1319;
+--rojo:#ff8a80;--rojo-s:#3a1d1d;--naranja:#ffb74d;--naranja-s:#3a2a14;--azul:#8ab4ff;--azul-s:#1b2a45;
+--verde:#6fdca3;--verde-s:#15301f;--morado:#c3a3ff;--morado-s:#2a2140;--gris:#aab4c2;--gris-s:#262e39;--oscuro:#cfd6e0;--oscuro-s:#2a323d}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 "Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif}
+#progress{position:fixed;top:0;left:0;height:3px;background:var(--accent);width:0;z-index:20}
+.layout{display:grid;grid-template-columns:300px minmax(0,1fr);min-height:100vh}
+aside{position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--paper);border-right:1px solid var(--line);padding:22px 16px 40px}
+aside .brand{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 8px 4px}
+aside .doc-title{font-weight:700;font-size:15px;margin:0 8px 16px;line-height:1.35}
+aside a.back{display:block;margin:0 8px 18px;font-size:13px;color:var(--accent);text-decoration:none}
+nav ul{list-style:none;margin:0;padding:0}
+nav a{display:block;color:var(--muted);text-decoration:none;font-size:13.5px;line-height:1.35;padding:5px 8px;border-radius:6px;border-left:2px solid transparent}
+nav a:hover{background:var(--soft);color:var(--ink)}
+nav a.active{color:var(--accent);background:var(--accent-soft);border-left-color:var(--accent);font-weight:600}
+nav .l1>a{color:var(--ink);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.05em;margin-top:14px}
+nav .l2>a{padding-left:12px}
+nav ul.sub{display:none;margin-left:12px;border-left:1px solid var(--line)}
+nav li.open>ul.sub{display:block}
+nav ul.sub a{font-size:12.5px;padding:3px 10px}
+main{padding:40px 56px 120px;max-width:1040px;width:100%;min-width:0}
+article.part,.card{min-width:0;overflow-wrap:break-word}
+.doc-head{margin-bottom:28px}
+.doc-head .kicker{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.doc-head .title{font-size:34px;font-weight:750;line-height:1.2;margin:6px 0 10px}
+.doc-head .meta{color:var(--muted);font-size:14px}
+.btn-excel{display:inline-block;margin-top:14px;font-size:14px;font-weight:650;text-decoration:none;color:#fff;background:#1d6f42;border-radius:8px;padding:8px 16px}
+.btn-excel:hover{background:#155232}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.pills a{font-size:13px;text-decoration:none;color:var(--accent);background:var(--accent-soft);padding:4px 12px;border-radius:999px}
+article.part{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:36px 44px;margin-bottom:36px}
+.part-head{border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:10px}
+.part-label{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+h1{font-size:28px;line-height:1.25;margin:4px 0 0}
+h2{font-size:22px;line-height:1.3;margin:44px 0 12px;padding-top:6px}
+h3{font-size:17.5px;line-height:1.35;margin:30px 0 10px}
+h4{font-size:15.5px;margin:22px 0 8px;color:var(--muted)}
+p{margin:10px 0}
+a{color:var(--accent)}
+hr{border:0;border-top:1px solid var(--line);margin:28px 0}
+strong{font-weight:650}
+code{font-family:Consolas,"Cascadia Code",Menlo,monospace;font-size:.88em;background:var(--soft);border:1px solid var(--line);border-radius:5px;padding:1px 5px}
+code.id{background:var(--accent-soft);border-color:transparent;color:var(--accent);font-weight:600}
+blockquote{margin:14px 0;padding:12px 18px;border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0}
+blockquote p{margin:0}
+ul,ol{padding-left:24px;margin:8px 0}
+li{margin:4px 0}
+li.task{list-style:none;margin-left:-20px}
+.chk{color:var(--accent);font-size:1.05em;margin-right:4px}
+.table-wrap{overflow-x:auto;margin:14px 0 18px;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:14.5px;line-height:1.5}
+th{background:var(--soft);text-align:left;font-weight:650;color:var(--ink);padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:last-child td{border-bottom:0}
+td.nowrap{white-space:nowrap}
+td.wide{min-width:240px}
+tbody tr:nth-child(even) td{background:color-mix(in srgb,var(--soft) 55%,transparent)}
+table.meta td:first-child{width:26%;font-weight:600;color:var(--muted);background:var(--soft)}
+table.meta thead{display:none}
+.b{display:inline-block;font-size:12.5px;font-weight:650;padding:1px 9px;border-radius:999px;white-space:nowrap}
+.b-rojo{color:var(--rojo);background:var(--rojo-s)}.b-naranja{color:var(--naranja);background:var(--naranja-s)}
+.b-azul{color:var(--azul);background:var(--azul-s)}.b-verde{color:var(--verde);background:var(--verde-s)}
+.b-morado{color:var(--morado);background:var(--morado-s)}.b-gris{color:var(--gris);background:var(--gris-s)}
+.b-oscuro{color:var(--oscuro);background:var(--oscuro-s)}
+.card{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:6px 24px 16px;margin:22px 0;background:var(--paper);box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.card h3{margin-top:16px}
+.card h4{margin-top:14px;font-size:16.5px;color:var(--ink);line-height:1.4}
+.card ul{margin-top:6px}
+.tag-id{display:inline-block;font-family:Consolas,Menlo,monospace;font-size:13px;color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:6px;margin-right:6px;vertical-align:2px}
+p.label{margin:18px 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.expected{background:var(--ok-soft);border-left:4px solid var(--ok);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0}
+.expected-title{margin:0 0 4px}
+div.expected ul{margin:4px 0 0}
+div.expected li{margin:5px 0}
+/* Tabla de preguntas del refinamiento: la columna Respuesta se ve como un espacio para escribir */
+table.preguntas td.wide{min-width:200px}
+table.preguntas td.resp{min-width:150px;background:var(--soft);border-left:1px dashed var(--line)}
+table.preguntas td.resp:empty::before{content:"Sin respuesta";color:var(--muted);font-style:italic;font-size:13.5px}
+div.exec{margin-top:14px;padding:10px 14px;border:1px dashed var(--line);border-radius:8px;color:var(--muted);font-size:14px;background:var(--soft)}
+.code{position:relative;margin:14px 0 18px}
+.code-lang{position:absolute;top:8px;right:12px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#8b95a7}
+pre{margin:0;background:var(--code-bg);color:var(--code-ink);padding:18px 20px;border-radius:10px;overflow-x:auto;font-size:13.5px;line-height:1.6}
+pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit}
+.g-kw{color:#7fb4ff;font-weight:700}.g-tag{color:#e0a458}.g-com{color:#7d8799;font-style:italic}
+.g-str{color:#a5d6a7}.g-pipe{color:#6b7689}.g-param{color:#f48fb1}
+/* Resultado vs. análisis */
+.blk{margin:40px 0 8px}
+.blk-label{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:3px 10px;border-radius:999px}
+.blk-resultado>.blk-label{color:var(--ok);background:var(--ok-soft)}
+.blk-resumen>.blk-label{color:var(--accent);background:var(--accent-soft)}
+section.blk>h2{margin-top:10px}
+.blk-explicacion{background:var(--accent-soft);border-left:4px solid var(--accent);border-radius:0 12px 12px 0;padding:14px 24px 12px}
+.blk-explicacion>.blk-label{color:var(--accent);background:var(--paper)}
+.blk-explicacion li{margin:8px 0}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0 4px;border-bottom:1px solid var(--line)}
+.tabs a{padding:8px 16px;font-size:14.5px;font-weight:600;text-decoration:none;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs a:hover{color:var(--ink)}
+.tabs a.on{color:var(--accent);border-bottom-color:var(--accent)}
+details.blk-analisis{border:1.5px dashed var(--line);background:var(--soft);border-radius:12px;padding:0 22px}
+details.blk-analisis .blk-label{color:var(--gris);background:var(--gris-s)}
+details.blk-analisis>summary h2{margin:8px 0 2px;font-size:19px;color:var(--muted)}
+details>summary{list-style:none;cursor:pointer}
+details>summary::-webkit-details-marker{display:none}
+details.blk-analisis>summary{padding:16px 0}
+.blk-hint{font-size:13px;color:var(--accent);font-weight:600}
+.blk-hint::after{content:"Mostrar ▾"}
+details[open]>summary>.blk-hint::after{content:"Ocultar ▴"}
+.blk-body{padding-bottom:18px}
+.blk-end{margin-top:22px;padding-top:10px;border-top:1.5px dashed var(--line);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-align:center}
+details.sub-analisis{margin:14px 0;border:1.5px dashed var(--line);border-radius:10px;background:var(--soft);padding:0 16px}
+details.sub-analisis>summary{padding:10px 0;font-size:14.5px;color:var(--muted)}
+.sub-label{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--gris);background:var(--gris-s);padding:2px 8px;border-radius:999px;margin-right:4px}
+.sub-body{padding-bottom:10px}
+p.porque{font-size:14px;color:var(--muted);background:var(--accent-soft);border-radius:8px;padding:8px 12px}
+/* Términos con explicación */
+.term{border-bottom:1.5px dotted var(--accent);cursor:help;outline:none}
+.term::after{content:"?";display:inline-block;font-size:10px;font-weight:700;line-height:14px;width:14px;height:14px;text-align:center;border-radius:50%;background:var(--accent);color:#fff;margin-left:3px;vertical-align:super}
+.term:focus{background:var(--accent-soft)}
+pre .term{border-bottom-color:#e0a458}
+pre .term::after{background:#e0a458;color:#1e2430}
+#tip{position:fixed;z-index:60;max-width:320px;background:var(--ink);color:var(--paper);font-size:13.5px;line-height:1.45;padding:10px 13px;border-radius:9px;box-shadow:0 8px 24px rgba(0,0,0,.25);display:none;pointer-events:none}
+#tip b{display:block;margin-bottom:3px}
+/* Leyenda y glosario */
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin-top:18px;padding:12px 16px;background:var(--paper);border:1px solid var(--line);border-radius:10px;font-size:13.5px;color:var(--muted)}
+.legend .blk-label{margin-right:4px}
+.lg-res{color:var(--ok);background:var(--ok-soft)}
+.lg-ana{color:var(--gris);background:var(--gris-s)}
+.lg-exp{color:var(--accent);background:var(--accent-soft)}
+#btn-analisis{margin-left:auto;border:1px solid var(--accent);background:var(--paper);color:var(--accent);border-radius:999px;padding:6px 16px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+#btn-analisis:hover{background:var(--accent-soft)}
+dl.glos{margin:10px 0 0;display:grid;grid-template-columns:minmax(160px,240px) 1fr;gap:10px 22px}
+dl.glos dt{font-weight:700}
+dl.glos dd{margin:0;color:var(--muted)}
+nav .toc-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--gris);background:var(--gris-s);border-radius:999px;padding:0 6px;margin-left:4px}
+nav a.k-analisis{font-style:italic}
+#toggle{display:none}
+@media (max-width:960px){
+ dl.glos{grid-template-columns:1fr;gap:2px 0} dl.glos dd{margin-bottom:10px}
+ .layout{grid-template-columns:minmax(0,1fr)}
+ aside{position:fixed;inset:0 25% 0 0;transform:translateX(-100%);transition:transform .2s;z-index:30;box-shadow:0 0 40px rgba(0,0,0,.25)}
+ aside.show{transform:none}
+ #toggle{display:block;position:fixed;right:16px;bottom:16px;z-index:40;border:0;border-radius:999px;padding:12px 18px;background:var(--accent);color:#fff;font-weight:600;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+ main{padding:24px 16px 90px}
+ article.part{padding:22px 18px}
+}
+@media print{
+ aside,#progress,#toggle,.pills,a.back,#tip,#btn-analisis{display:none!important}
+ .term::after,.blk-hint{display:none}
+ .layout{display:block} main{padding:0;max-width:none}
+ body{background:#fff;font-size:12.5px}
+ article.part{border:0;padding:0;break-before:page}
+ .card,table,pre{break-inside:avoid}
+}
+</style></head>
+<body><div id="progress"></div>
+<div class="layout">
+<aside><p class="brand">Equipo QA</p><p class="doc-title">MakersPay-Envio-Dinero</p><a class="back" href="../index.html">← Todos los informes</a><nav><ul><li class="l1"><a href="#criterios-de-aceptación-makerspay-envío-de-dinero-por-número-de-celula">Criterios de aceptación — MakersPay: envío de dinero por número de celular</a></li><li class="l2"><a href="#resumen">Resumen</a></li><li class="l2"><a href="#criterios-recibidos">Criterios recibidos</a></li><li class="l2"><a href="#qué-se-prueba-y-cómo">Qué se prueba y cómo</a></li><li class="l2"><a href="#tabla-de-decisión-resumen">Tabla de decisión (resumen)</a></li><li class="l2"><a href="#técnicas-revisadas">Técnicas revisadas</a></li><li class="l2"><a href="#mapa-de-escenarios-posibles">Mapa de escenarios posibles</a></li><li class="l2"><a href="#preguntas">Preguntas</a></li><li class="l1"><a href="#glosario">📖 Glosario</a></li></ul></nav></aside>
+<main>
+<div class="doc-head"><div class="kicker">Equipo QA · Criterios</div><div class="title">MakersPay-Envio-Dinero</div>
+<div class="meta">Generado el 09/10/2026 19:21 · 1 historias · 7 criterios · 10 casos de prueba</div><div class="tabs"><a href="criterios.html" class="on">Criterios</a><a href="casos-de-prueba.html">Casos de prueba</a><a href="auditoria.html">Auditoría</a></div><div class="legend"><span><span class="term" tabindex="0" data-tip="Así se marcan las palabras técnicas. Pasa el mouse o tócalas para ver qué significan. Al final está el glosario completo.">palabra</span> pasa el mouse para ver qué significa</span><span><span class="blk-label lg-exp">💡 Cómo se hizo</span>explicación sencilla del método</span></div></div>
+<article class="part"><header class="part-head"><h1 id="criterios-de-aceptación-makerspay-envío-de-dinero-por-número-de-celula">Criterios de aceptación — MakersPay: envío de dinero por número de celular</h1></header>
+<h2 id="resumen">Resumen</h2>
+<p>7 criterios (REQ-001 / HU-001) → 10 <span class="term" tabindex="0" data-tip="Pasos concretos, con datos y resultado esperado, para comprobar una sola cosa.">casos de prueba</span> y 8 preguntas pendientes. Técnicas: <span class="term" tabindex="0" data-tip="Técnica: agrupar los datos que el sistema trata igual y probar uno de cada grupo.">partición de equivalencia</span>, <span class="term" tabindex="0" data-tip="Técnica: probar justo en los bordes de un rango (mínimo, máximo y uno por fuera), donde más fallos aparecen.">valores límite</span>, <span class="term" tabindex="0" data-tip="Técnica: tabla con combinaciones de condiciones y el resultado esperado de cada una.">tabla de decisión</span> y un caso de <span class="term" tabindex="0" data-tip="Técnica basada en experiencia: probar errores típicos (campos vacíos, doble clic, caracteres raros).">adivinación de errores</span> (doble clic en "Enviar", CP-007). No hay estados, por eso no se usa <span class="term" tabindex="0" data-tip="Técnica: probar cómo algo cambia de estado (pendiente → activo) y los cambios que no se permiten.">transición de estados</span>.</p>
+<h2 id="criterios-recibidos">Criterios recibidos</h2>
+<div class="table-wrap"><table class=""><thead><tr><th>ID</th><th>Criterio (tal cual)</th></tr></thead><tbody><tr><td class="nowrap">CA-001.01</td><td class="wide">Un usuario autenticado puede enviar dinero a otro usuario registrado usando su número de celular.</td></tr><tr><td class="nowrap">CA-001.02</td><td class="wide">El monto mínimo por transacción es $5.000 COP.</td></tr><tr><td class="nowrap">CA-001.03</td><td class="wide">El monto máximo por transacción es $2.000.000 COP.</td></tr><tr><td class="nowrap">CA-001.04</td><td class="wide">El usuario no puede enviar más dinero del saldo disponible.</td></tr><tr><td class="nowrap">CA-001.05</td><td class="wide">No se permiten envíos a su mismo número de celular.</td></tr><tr><td class="nowrap">CA-001.06</td><td class="wide">Si la transacción es exitosa: se descuenta el saldo del remitente; se incrementa el saldo del destinatario; se registra el movimiento en el historial de ambos.</td></tr><tr><td class="nowrap">CA-001.07</td><td class="wide">Si la transacción falla, se muestra un mensaje de error claro y no se afecta el saldo.</td></tr></tbody></table></div>
+<p>Los criterios no traían ID; se numeraron. CA-001.01 es el requerimiento resumido.</p>
+<h2 id="qué-se-prueba-y-cómo">Qué se prueba y cómo</h2>
+<div class="table-wrap"><table class=""><thead><tr><th>Condición</th><th>Valores a probar</th><th>Técnica</th><th>Caso</th></tr></thead><tbody><tr><td>Sesión (CA-001.01)</td><td>Con sesión / sin sesión</td><td><span class="term" tabindex="0" data-tip="Técnica: agrupar los datos que el sistema trata igual y probar uno de cada grupo.">Partición de equivalencia</span></td><td>CP-001 / CP-003</td></tr><tr><td>Destinatario (CA-001.01, .05)</td><td class="wide">Otro usuario registrado / no registrado / su mismo número</td><td>Partición de equivalencia</td><td>CP-001 / CP-006 / CP-009</td></tr><tr><td>Monto mínimo (CA-001.02)</td><td class="wide">$5.000 (válido) / $4.999 (no); $0 y negativo como variantes</td><td><span class="term" tabindex="0" data-tip="Técnica: probar justo en los bordes de un rango (mínimo, máximo y uno por fuera), donde más fallos aparecen.">Valores límite</span></td><td>CP-002 (A) / CP-008</td></tr><tr><td>Monto máximo (CA-001.03)</td><td>$2.000.000 (válido) / $2.000.001 (no)</td><td>Valores límite</td><td>CP-002 (B) / CP-005</td></tr><tr><td>Saldo (CA-001.04)</td><td class="wide">saldo − 1 (válido) / saldo exacto (<span class="term" tabindex="0" data-tip="Algo que se da por cierto porque nadie lo ha confirmado aún. Hay que validarlo con negocio.">supuesto</span> válido, P-02) / saldo + 1 (no)</td><td>Valores límite</td><td>CP-002 (C, D) / CP-004</td></tr><tr><td>Éxito (CA-001.06)</td><td>Descuento, incremento e historial de ambos</td><td><span class="term" tabindex="0" data-tip="Técnica: tabla con combinaciones de condiciones y el resultado esperado de cada una.">Tabla de decisión</span></td><td class="nowrap">CP-001</td></tr><tr><td>Doble envío (supuesto, sin criterio propio)</td><td>Un solo descuento, un solo movimiento</td><td><span class="term" tabindex="0" data-tip="Técnica basada en experiencia: probar errores típicos (campos vacíos, doble clic, caracteres raros).">Adivinación de errores</span></td><td class="nowrap">CP-007</td></tr><tr><td>Fallo (CA-001.07)</td><td class="wide">Mensaje claro y saldo sin cambios en cada rechazo</td><td>Tabla de decisión</td><td>CP-003 a CP-006 y CP-008 a CP-010</td></tr></tbody></table></div>
+<p>Cómo se combinan: las 4 condiciones (sesión, destinatario, monto, saldo) se unen con "Y": el envío ocurre solo si se cumplen todas. Tipos: sesión = categórica sí/no; destinatario = conjunto de 3 valores; monto = rango con límite; saldo = número con límite. "Mínimo" y "máximo" incluyen el límite. "No puede enviar más dinero del saldo" no está en la tabla fija de límites, así que es <span class="term" tabindex="0" data-tip="Algo que se puede entender de varias formas. En un requisito es un problema.">ambiguo</span> (P-02) y se prueban 3 valores.</p>
+<p>Decisiones clave:</p>
+<ul><li>"Mínimo" y "máximo" incluyen el límite: $5.000 y $2.000.000 sí se pueden enviar.</li><li>"Registrado" y "mismo número" son una sola condición con 3 valores (quien se envía a sí mismo ya es un usuario registrado). "Monto menor" y "monto mayor" tampoco pueden fallar a la vez.</li><li>Sin sesión no hay saldo ni destinatario, así que es una sola combinación.</li></ul>
+<h2 id="tabla-de-decisión-resumen">Tabla de decisión (resumen)</h2>
+<p>Con sesión: destinatario (3) × monto (3) × saldo alcanza (2) = 18 combinaciones, más 1 sin sesión = 19.</p>
+<div class="table-wrap"><table class=""><thead><tr><th>Combinación</th><th>Sesión</th><th>Destinatario</th><th>Monto</th><th>Saldo alcanza</th><th>Resultado</th><th>Caso</th></tr></thead><tbody><tr><td class="nowrap">1</td><td>Sí</td><td>Registrado</td><td>Dentro</td><td>Sí</td><td class="wide">Se envía; descuento, incremento e historial de ambos</td><td class="nowrap">CP-001</td></tr><tr><td class="nowrap">2</td><td>No</td><td>—</td><td>—</td><td>—</td><td>No se envía</td><td class="nowrap">CP-003</td></tr><tr><td class="nowrap">3</td><td>Sí</td><td>No registrado</td><td>Dentro</td><td>Sí</td><td>Rechazo, saldo sin cambios</td><td class="nowrap">CP-006</td></tr><tr><td class="nowrap">4</td><td>Sí</td><td>Propio</td><td>Dentro</td><td>Sí</td><td>Rechazo, saldo sin cambios</td><td class="nowrap">CP-009</td></tr><tr><td class="nowrap">5</td><td>Sí</td><td>Registrado</td><td>Menor</td><td>Sí</td><td>Rechazo, saldo sin cambios</td><td class="nowrap">CP-008</td></tr><tr><td class="nowrap">6</td><td>Sí</td><td>Registrado</td><td>Mayor</td><td>Sí</td><td>Rechazo, saldo sin cambios</td><td class="nowrap">CP-005</td></tr><tr><td class="nowrap">7</td><td>Sí</td><td>Registrado</td><td>Dentro</td><td>No</td><td>Rechazo, saldo sin cambios</td><td class="nowrap">CP-004</td></tr><tr><td class="nowrap">8</td><td>Sí</td><td>No registrado</td><td>Menor</td><td>Sí</td><td>Rechazo (mensaje: P-05)</td><td>Colapsada en CP-010</td></tr><tr><td class="nowrap">9</td><td>Sí</td><td>No registrado</td><td>Mayor</td><td>Sí</td><td>Rechazo (mensaje: P-05)</td><td>Colapsada en CP-010</td></tr><tr><td class="nowrap">10</td><td>Sí</td><td>No registrado</td><td>Dentro</td><td>No</td><td>Rechazo (mensaje: P-05)</td><td>Colapsada en CP-010</td></tr><tr><td class="nowrap">11</td><td>Sí</td><td>Propio</td><td>Menor</td><td>Sí</td><td>Rechazo (mensaje: P-05)</td><td>Colapsada en CP-010</td></tr><tr><td class="nowrap">12</td><td>Sí</td><td>Propio</td><td>Mayor</td><td>Sí</td><td>Rechazo (mensaje: P-05)</td><td>Colapsada en CP-010</td></tr><tr><td class="nowrap">13</td><td>Sí</td><td>Propio</td><td>Dentro</td><td>No</td><td>Rechazo (mensaje: P-05)</td><td>Colapsada en CP-010</td></tr><tr><td class="nowrap">14</td><td>Sí</td><td>Registrado</td><td>Menor</td><td>No</td><td>Rechazo (mensaje: P-05)</td><td>Colapsada en CP-010</td></tr><tr><td class="nowrap">15</td><td>Sí</td><td>Registrado</td><td>Mayor</td><td>No</td><td>Rechazo (mensaje: P-05)</td><td>Colapsada en CP-010</td></tr><tr><td class="nowrap">16</td><td>Sí</td><td>No registrado</td><td>Menor</td><td>No</td><td>Rechazo (mensaje: P-05)</td><td>CP-010 (representante)</td></tr><tr><td class="nowrap">17</td><td>Sí</td><td>No registrado</td><td>Mayor</td><td>No</td><td>Rechazo (mensaje: P-05)</td><td>Colapsada en CP-010</td></tr><tr><td class="nowrap">18</td><td>Sí</td><td>Propio</td><td>Menor</td><td>No</td><td>Rechazo (mensaje: P-05)</td><td>Colapsada en CP-010</td></tr><tr><td class="nowrap">19</td><td>Sí</td><td>Propio</td><td>Mayor</td><td>No</td><td>Rechazo (mensaje: P-05)</td><td>Colapsada en CP-010</td></tr></tbody></table></div>
+<p>Las combinaciones 8 a 19 tienen el mismo resultado (rechazo sin tocar saldo) y no se sabe qué mensaje sale ni en qué orden se valida (P-05). Por eso las cubre un solo caso (CP-010) con la 16 como representante; si P-05 dice que el mensaje cambia, se agregan variantes.</p>
+<h2 id="técnicas-revisadas">Técnicas revisadas</h2>
+<div class="table-wrap"><table class=""><thead><tr><th>Técnica</th><th>¿Se aplicó?</th><th>Motivo</th></tr></thead><tbody><tr><td><span class="term" tabindex="0" data-tip="Técnica: agrupar los datos que el sistema trata igual y probar uno de cada grupo.">Partición de equivalencia</span></td><td>Sí</td><td>Sesión, destinatario, monto y saldo</td></tr><tr><td><span class="term" tabindex="0" data-tip="Técnica: probar justo en los bordes de un rango (mínimo, máximo y uno por fuera), donde más fallos aparecen.">Valores límite</span></td><td>Sí</td><td class="wide">$4.999 / $5.000, $2.000.000 / $2.000.001, saldo − 1 / saldo / saldo + 1</td></tr><tr><td><span class="term" tabindex="0" data-tip="Técnica: tabla con combinaciones de condiciones y el resultado esperado de cada una.">Tabla de decisión</span></td><td>Sí</td><td>Las 19 combinaciones de arriba</td></tr><tr><td><span class="term" tabindex="0" data-tip="Técnica: probar cómo algo cambia de estado (pendiente → activo) y los cambios que no se permiten.">Transición de estados</span></td><td>No</td><td class="wide">Los criterios no definen estados (solo "éxito" o "falla"). Estados de cuenta o sesión: P-07</td></tr><tr><td><span class="term" tabindex="0" data-tip="Técnica basada en experiencia: probar errores típicos (campos vacíos, doble clic, caracteres raros).">Adivinación de errores</span></td><td>Sí, un caso (CP-007)</td><td class="wide">Doble clic en "Enviar": riesgo de descontar dos veces; se deduce de CA-001.06. No tiene criterio propio, es un <span class="term" tabindex="0" data-tip="Algo que se da por cierto porque nadie lo ha confirmado aún. Hay que validarlo con negocio.">supuesto</span>. Formato del número (P-04), decimales y vacíos (P-03), comisiones (P-06) y sesión vencida (P-07) quedaron como preguntas: el criterio no permite deducir el resultado</td></tr></tbody></table></div>
+<h2 id="mapa-de-escenarios-posibles">Mapa de escenarios posibles</h2>
+<p>Todo lo que puede pasar al enviar dinero, y qué se hizo con cada cosa. <strong>Caso</strong> = ya tiene <span class="term" tabindex="0" data-tip="Pasos concretos, con datos y resultado esperado, para comprobar una sola cosa.">caso de prueba</span>. <strong>Pregunta</strong> = no se prueba porque el criterio no dice qué debe pasar; se pregunta a negocio y, si responden, se agrega el caso.</p>
+<div class="table-wrap"><table class=""><thead><tr><th>Área</th><th>Escenario</th><th>Estado</th><th>Dónde</th></tr></thead><tbody><tr><td>Sesión</td><td>Usuario con sesión envía</td><td>Caso</td><td class="nowrap">CP-001</td></tr><tr><td>Sesión</td><td>Sin sesión intenta enviar</td><td>Caso</td><td class="nowrap">CP-003</td></tr><tr><td>Sesión</td><td>Sesión vencida a mitad del envío</td><td>Pregunta</td><td class="nowrap">P-07</td></tr><tr><td>Destinatario</td><td>Otro usuario registrado</td><td>Caso</td><td class="nowrap">CP-001</td></tr><tr><td>Destinatario</td><td>Celular no registrado</td><td>Caso</td><td class="nowrap">CP-006</td></tr><tr><td>Destinatario</td><td>Su mismo número</td><td>Caso</td><td class="nowrap">CP-009</td></tr><tr><td>Destinatario</td><td class="wide">Formato inválido (letras, corto, vacío, +57, espacios)</td><td>Pregunta</td><td class="nowrap">P-04</td></tr><tr><td>Destinatario</td><td class="wide">Cuenta bloqueada, sin verificar o dada de baja</td><td>Pregunta</td><td class="nowrap">P-07</td></tr><tr><td>Monto</td><td class="wide">Mínimo exacto $5.000 / máximo exacto $2.000.000</td><td>Caso</td><td>CP-002 (A, B)</td></tr><tr><td>Monto</td><td>$4.999</td><td>Caso</td><td>CP-008 (A)</td></tr><tr><td>Monto</td><td>$2.000.001</td><td>Caso</td><td class="nowrap">CP-005</td></tr><tr><td>Monto</td><td>$0 y negativo</td><td>Caso (depende de P-03)</td><td>CP-008 (B, C)</td></tr><tr><td>Monto</td><td>Vacío, texto o con decimales</td><td>Pregunta</td><td class="nowrap">P-03</td></tr><tr><td>Saldo</td><td>saldo − $1 y saldo exacto</td><td>Caso (exacto depende de P-02)</td><td>CP-002 (C, D)</td></tr><tr><td>Saldo</td><td>saldo + $1</td><td>Caso</td><td class="nowrap">CP-004</td></tr><tr><td>Saldo</td><td class="wide">Comisión o retención que cambie el saldo disponible</td><td>Pregunta</td><td class="nowrap">P-06</td></tr><tr><td>Resultado exitoso</td><td>Descuento, incremento e historial de ambos</td><td>Caso</td><td>CP-001, CP-002</td></tr><tr><td>Resultado exitoso</td><td class="wide">Mensaje de confirmación, contenido del historial</td><td>Pregunta</td><td class="nowrap">P-08</td></tr><tr><td>Resultado fallido</td><td class="wide">Mensaje de error claro y saldo sin cambios, por cada motivo</td><td>Caso</td><td>CP-004 a CP-006, CP-008, CP-009</td></tr><tr><td>Resultado fallido</td><td>Dos o más motivos a la vez</td><td>Caso (representante)</td><td class="nowrap">CP-010</td></tr><tr><td>Resultado fallido</td><td>Intento rechazado en el historial</td><td>Pregunta</td><td class="nowrap">P-08</td></tr><tr><td>Doble envío</td><td>Doble clic en "Enviar"</td><td>Caso (<span class="term" tabindex="0" data-tip="Algo que se da por cierto porque nadie lo ha confirmado aún. Hay que validarlo con negocio.">supuesto</span>)</td><td class="nowrap">CP-007</td></tr><tr><td>Integridad</td><td class="wide">Falla técnica al enviar (conexión cortada, servidor caído después de descontar y antes de acreditar)</td><td>Pregunta</td><td class="nowrap">P-07</td></tr></tbody></table></div>
+<p>Cada pregunta con respuesta se vuelve un caso nuevo; mientras tanto el escenario queda registrado aquí para que no se pierda.</p>
+<h2 id="preguntas">Preguntas</h2>
+<div class="table-wrap"><table class=""><thead><tr><th>#</th><th>Pregunta</th><th>Afecta a</th><th>Qué supuse mientras tanto</th></tr></thead><tbody><tr><td class="nowrap">P-01</td><td class="wide">¿Qué texto exacto ve el usuario en cada rechazo: monto menor al mínimo, monto mayor al máximo, saldo insuficiente, destinatario no registrado y mismo número? Y si no hay sesión, ¿se le envía al inicio de sesión o ve un mensaje?</td><td>CA-001.07; CP-003 a CP-006, CP-008 y CP-009</td><td class="wide">Solo se comprueba que se muestra un mensaje de error claro que dice el motivo del rechazo (texto pendiente), que no se envía y que el saldo no cambia. En CP-003 solo se comprueba que no se puede enviar</td></tr><tr><td class="nowrap">P-02</td><td class="wide">Si el monto es exactamente igual al saldo disponible, ¿se permite el envío?</td><td class="nowrap">CA-001.04</td><td class="wide">Se permite y el saldo del remitente queda en $0. Solo la variante D de CP-002 depende de esto</td></tr><tr><td class="nowrap">P-03</td><td class="wide">¿Qué pasa con montos de $0, negativos, vacíos o con decimales? ¿El campo deja escribirlos o los bloquea? ¿Se aceptan centavos (p. ej. $10.000,50)?</td><td class="nowrap">CA-001.02</td><td class="wide">$0 y negativos se rechazan por ser menores al mínimo. Solo las variantes B y C de CP-008 dependen de esto. Montos vacíos y con decimales no se prueban</td></tr><tr><td class="nowrap">P-04</td><td class="wide">¿Cuál es el formato válido del número de celular (10 dígitos, prefijo +57, espacios o guiones)? ¿Qué mensaje sale si el formato es inválido (letras, muy corto, vacío, solo espacios)?</td><td class="nowrap">CA-001.01</td><td class="wide">Los <span class="term" tabindex="0" data-tip="Valores inventados que se usan al ejecutar las pruebas (nunca datos reales de personas).">datos de prueba</span> usan celulares de 10 dígitos sin prefijo, solo como forma de escribir el dato. No se prueban formatos inválidos</td></tr><tr><td class="nowrap">P-05</td><td class="wide">Si fallan dos o más condiciones a la vez (p. ej. destinatario no registrado y saldo insuficiente), ¿qué mensaje o mensajes ve el usuario y en qué orden se validan?</td><td>CA-001.07; CP-010</td><td class="wide">Solo se comprueba que no se envía, que el saldo no cambia y que hay al menos un mensaje de error claro</td></tr><tr><td class="nowrap">P-06</td><td class="wide">¿El envío tiene comisión, impuestos o retenciones? ¿"Saldo disponible" y los límites se calculan sobre el monto solo o sobre monto + comisión?</td><td>CA-001.04; CA-001.06</td><td class="wide">No se asume ninguna comisión: el remitente baja exactamente el monto y el destinatario sube exactamente ese monto. Las cifras de CP-001, CP-002 y CP-007 dependen de esto</td></tr><tr><td class="nowrap">P-07</td><td class="wide">¿Qué pasa con estados intermedios: sesión vencida a mitad del envío, cuenta del remitente o del destinatario bloqueada, sin verificar o dada de baja?</td><td class="nowrap">CA-001.01</td><td>No se prueban</td></tr><tr><td class="nowrap">P-08</td><td class="wide">Cuando el envío sale bien, ¿hay mensaje o pantalla de confirmación, o un paso extra (PIN, resumen) antes de enviar? ¿Qué datos tiene la entrada del historial (monto, contraparte, fecha, tipo)? ¿Los intentos rechazados aparecen en el historial?</td><td>CA-001.06; CA-001.07</td><td class="wide">El botón "Enviar" ejecuta el envío sin paso extra. En el historial solo se comprueba que existe un movimiento nuevo por el monto en ambos usuarios. En los rechazos no se revisa el historial</td></tr></tbody></table></div></article><article class="part"><header class="part-head"><span class="part-label">Para aprender</span><h1 id="glosario">📖 Glosario de este informe</h1></header><p>Todas las palabras técnicas que aparecen en este informe, explicadas en palabras simples.</p><dl class="glos"><dt>Adivinación de errores</dt><dd>Técnica basada en experiencia: probar errores típicos (campos vacíos, doble clic, caracteres raros).</dd><dt>Ambigüedad</dt><dd>Algo que se puede entender de varias formas. En un requisito es un problema.</dd><dt>Análisis de valores límite</dt><dd>Técnica: probar justo en los bordes de un rango (mínimo, máximo y uno por fuera), donde más fallos aparecen.</dd><dt>Caso de prueba</dt><dd>Pasos concretos, con datos y resultado esperado, para comprobar una sola cosa.</dd><dt>Datos de prueba</dt><dd>Valores inventados que se usan al ejecutar las pruebas (nunca datos reales de personas).</dd><dt>Partición de equivalencia</dt><dd>Técnica: agrupar los datos que el sistema trata igual y probar uno de cada grupo.</dd><dt>Supuesto</dt><dd>Algo que se da por cierto porque nadie lo ha confirmado aún. Hay que validarlo con negocio.</dd><dt>Tabla de decisión</dt><dd>Técnica: tabla con combinaciones de condiciones y el resultado esperado de cada una.</dd><dt>Transición de estados</dt><dd>Técnica: probar cómo algo cambia de estado (pendiente → activo) y los cambios que no se permiten.</dd></dl></article>
+</main></div>
+<button id="toggle" type="button">Índice</button>
+<script>
+(function(){
+ var links=[].slice.call(document.querySelectorAll('nav a[href^="#"]'));
+ var map={};links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a;});
+ var allHeads=[].slice.call(document.querySelectorAll('main h1[id],main h2[id],main h3[id]')).filter(function(h){return map[h.id];});
+ var bar=document.getElementById('progress'),aside=document.querySelector('aside');
+ // Un título está a la vista si ningún bloque plegado lo esconde (el título del propio bloque sí se ve)
+ function visible(h){var el=h;while(el){var d=el.parentElement&&el.parentElement.closest('details');if(!d)return true;
+  var s=el.closest('summary');if(!d.open&&!(s&&s.parentElement===d))return false;el=d;}return true;}
+ function update(){
+  var heads=allHeads.filter(visible);
+  var y=window.scrollY,cur=heads[0];
+  for(var i=0;i<heads.length;i++){if(heads[i].getBoundingClientRect().top<120)cur=heads[i];else break;}
+  links.forEach(function(a){a.classList.remove('active');});
+  document.querySelectorAll('nav li.open').forEach(function(li){li.classList.remove('open');});
+  if(cur&&map[cur.id]){var a=map[cur.id];a.classList.add('active');
+   var li=a.parentElement;while(li&&li.tagName!=='NAV'){if(li.tagName==='LI')li.classList.add('open');li=li.parentElement;}
+   var r=a.getBoundingClientRect(),ar=aside.getBoundingClientRect();
+   if(r.top<ar.top+60||r.bottom>ar.bottom-60)aside.scrollTop+=r.top-ar.top-ar.height/3;}
+  var h=document.documentElement.scrollHeight-window.innerHeight;bar.style.width=(h>0?y/h*100:0)+'%';
+ }
+ window.addEventListener('scroll',update,{passive:true});update();
+ var t=document.getElementById('toggle');
+ t.addEventListener('click',function(){aside.classList.toggle('show');});
+ // Abrir el análisis plegado que contiene el destino de un enlace del índice
+ function abrirHasta(id){var el=document.getElementById(id);if(!el)return;var d=el.closest('details');
+  while(d){d.open=true;d=d.parentElement.closest('details');}}
+ links.forEach(function(a){a.addEventListener('click',function(){aside.classList.remove('show');abrirHasta(a.getAttribute('href').slice(1));});});
+ if(location.hash)abrirHasta(decodeURIComponent(location.hash.slice(1)));
+ // Botón mostrar / ocultar todo el análisis
+ var btn=document.getElementById('btn-analisis');
+ if(btn){btn.addEventListener('click',function(){var abrir=btn.getAttribute('data-open')!=='1';
+  document.querySelectorAll('details.blk-analisis,details.sub-analisis').forEach(function(d){d.open=abrir;});
+  btn.setAttribute('data-open',abrir?'1':'0');btn.textContent=abrir?'Ocultar todo el análisis':'Mostrar todo el análisis';update();});}
+ document.addEventListener('toggle',function(){update();},true);
+ // Ventana de ayuda de los términos (mouse, teclado o toque)
+ var tip=document.createElement('div');tip.id='tip';document.body.appendChild(tip);var fijo=null;
+ function mostrar(el){tip.innerHTML='';var b=document.createElement('b');b.textContent=el.textContent;tip.appendChild(b);
+  tip.appendChild(document.createTextNode(el.getAttribute('data-tip')));tip.style.display='block';
+  var r=el.getBoundingClientRect(),w=tip.offsetWidth,h=tip.offsetHeight;
+  var x=Math.min(Math.max(8,r.left),window.innerWidth-w-8),yy=r.bottom+8;if(yy+h>window.innerHeight-8)yy=r.top-h-8;
+  tip.style.left=x+'px';tip.style.top=yy+'px';}
+ function ocultar(){tip.style.display='none';fijo=null;}
+ document.addEventListener('mouseover',function(e){var t=e.target.closest&&e.target.closest('.term');if(t)mostrar(t);});
+ document.addEventListener('mouseout',function(e){var t=e.target.closest&&e.target.closest('.term');if(t&&!fijo)tip.style.display='none';});
+ document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.term');
+  if(t){if(fijo===t){ocultar();}else{fijo=t;mostrar(t);}}else if(fijo){ocultar();}});
+ document.addEventListener('focusin',function(e){if(e.target.classList&&e.target.classList.contains('term'))mostrar(e.target);});
+ document.addEventListener('focusout',function(e){if(e.target.classList&&e.target.classList.contains('term')&&!fijo)tip.style.display='none';});
+ window.addEventListener('scroll',function(){if(tip.style.display==='block')ocultar();},{passive:true});
+})();
+</script></body></html>
