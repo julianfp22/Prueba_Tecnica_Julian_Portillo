@@ -1,0 +1,49 @@
+name: Pruebas SauceDemo Selenium
+
+on:
+  # Solo se activa si cambia algo dentro de saucedemo-smoke-selenium/ (o este mismo archivo).
+  push:
+    branches: [main]
+    paths:
+      - 'saucedemo-smoke-selenium/**'
+      - '.github/workflows/saucedemo-selenium.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'saucedemo-smoke-selenium/**'
+      - '.github/workflows/saucedemo-selenium.yml'
+  workflow_dispatch:
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: saucedemo-smoke-selenium
+
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v7
+
+      - name: Instalar Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: saucedemo-smoke-selenium/requirements.txt
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      # Chrome ya viene instalado en el servidor y Selenium descarga el driver solo.
+      - name: Ejecutar las pruebas (3 en paralelo, sin ventana)
+        run: pytest --headless -n 3
+
+      - name: Guardar el reporte y las capturas
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: reporte-selenium
+          path: saucedemo-smoke-selenium/reports/
+          retention-days: 14
